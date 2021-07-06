@@ -1,0 +1,223 @@
+List all shell scripts in current directory
+Listing is -rw-r--r--  1 masterwill  staff   198  3 Jul 15:19 backup-andor.sh
+-rw-r--r--  1 masterwill  staff  1112  3 Jul 15:19 backup-blog.sh
+-rw-r--r--  1 masterwill  staff   427  3 Jul 15:19 backup-commsub.sh
+-rw-r--r--  1 masterwill  staff   657  3 Jul 15:19 backup-flowcon.sh
+-rw-r--r--  1 masterwill  staff   277  3 Jul 15:19 backup-var.sh
+-rw-r--r--  1 masterwill  staff   321  3 Jul 15:19 backup.sh
+-rwxr--r--  1 masterwill  staff   399  3 Jul 15:37 check_file_exists.sh
+-rwxr--r--  1 masterwill  staff   242  3 Jul 15:11 cmdlinevar.sh
+-rw-r--r--  1 masterwill  staff   207  3 Jul 15:05 command_substitution.sh
+-rwxr--r--  1 masterwill  staff   260  6 Jul 23:17 for_loop.sh
+-rwxr--r--  1 masterwill  staff   243  3 Jul 15:17 if_conditional.sh
+-rwxr--r--  1 masterwill  staff   228  3 Jul 15:44 if_multiple_expressions.sh
+-rwxr--r--  1 masterwill  staff   499  6 Jul 23:05 ifelse.sh
+File: -rw-r--r--  1 masterwill  staff   198  3 Jul 15:19 backup-andor.sh
+-rw-r--r--  1 masterwill  staff  1112  3 Jul 15:19 backup-blog.sh
+-rw-r--r--  1 masterwill  staff   427  3 Jul 15:19 backup-commsub.sh
+-rw-r--r--  1 masterwill  staff   657  3 Jul 15:19 backup-flowcon.sh
+-rw-r--r--  1 masterwill  staff   277  3 Jul 15:19 backup-var.sh
+-rw-r--r--  1 masterwill  staff   321  3 Jul 15:19 backup.sh
+-rwxr--r--  1 masterwill  staff   399  3 Jul 15:37 check_file_exists.sh
+-rwxr--r--  1 masterwill  staff   242  3 Jul 15:11 cmdlinevar.sh
+-rw-r--r--  1 masterwill  staff   207  3 Jul 15:05 command_substitution.sh
+-rwxr--r--  1 masterwill  staff   260  6 Jul 23:17 for_loop.sh
+-rwxr--r--  1 masterwill  staff   243  3 Jul 15:17 if_conditional.sh
+-rwxr--r--  1 masterwill  staff   228  3 Jul 15:44 if_multiple_expressions.sh
+-rwxr--r--  1 masterwill  staff   499  6 Jul 23:05 ifelse.sh - Contents #!/bin/bash
+
+# Backing up required files
+
+echo "Creating backup directory" && mkdir ~/backup || echo "Directory already exists."
+
+echo "Copying Files" && cp /usr/bin/* ~/backup || echo $?
+
+exit 127
+#!/bin/bash
+
+#####
+# This is a script given to users on a machine when they want to back 
+# up their work to a specific backup directory (/home/$USER/work_backup)
+# 
+# The script requires two parameters - the first is where the log file 
+# will be and the second is what directory will be backed up.
+#####
+
+
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+	echo "You have failed to pass a parameter."
+	echo "Reminder that all required files will be copied to /home/\$USER/work/work_backup."
+	echo "USAGE: ./backup.sh LOGFILE DIRECTORY-TO-BACKUP"
+	exit 255;
+fi
+
+
+MYLOG=$1
+BACKUP_FROM=$2
+
+function ctrlc {
+	rm -rf /home/$USER/work/work_backup
+	rm -f $MYLOG
+	echo "Received Ctrl+C"
+	exit 255
+}
+
+trap ctrlc SIGINT
+
+echo "Timestamp before work is done $(date +"%D %T")" >> $MYLOG
+
+echo "Creating backup directory" >> $MYLOG
+if ! (mkdir /home/$USER/work/work_backup 2> /dev/null)
+then
+	echo "Directory already existed." >> $MYLOG
+fi
+
+echo "Copying Files" >> $MYLOG
+cp -v $BACKUP_FROM/* /home/$USER/work/work_backup/ >> $MYLOG
+echo "Finished Copying Files" >> $MYLOG
+echo "Timestamp after work is done $(date +"%D %T")" >> $MYLOG
+#!/bin/bash
+
+MYLOG=$1
+
+echo "Timestamp before work is done $(date +"%D %T")" >> /home/$USER/$MYLOG
+echo "Creating backup directory" >> /home/$USER/$MYLOG
+mkdir /home/$USER/work_backup
+
+echo "Copying Files" >> /home/$USER/$MYLOG
+cp -v /home/$USER/work/* /home/$USER/work_backup/ >> /home/$USER/$MYLOG
+echo "Finished Copying Files" >> /home/$USER/$MYLOG
+echo "Timestamp after work is done $(date +"%D %T")" >> /home/$USER/$MYLOG
+#!/bin/bash
+
+if [ -z "$1" ]; then
+	echo "You have failed to pass a parameter. Please try again."
+	exit 255;
+fi
+
+
+MYLOG=$1
+function ctrlc {
+	rm -rf /home/$USER/work_backup
+	rm -f /home/$USER/$MYLOG
+	echo "Received Ctrl+C"
+	exit 255
+}
+
+trap ctrlc SIGINT
+
+echo "Timestamp before work is done $(date +"%D %T")" >> /home/$USER/$MYLOG
+echo "Creating backup directory" >> /home/$USER/$MYLOG
+mkdir /home/$USER/work_backup
+
+echo "Copying Files" >> /home/$USER/$MYLOG
+cp -v /home/$USER/work/* /home/$USER/work_backup/ >> /home/$USER/$MYLOG
+echo "Finished Copying Files" >> /home/$USER/$MYLOG
+echo "Timestamp after work is done $(date +"%D %T")" >> /home/$USER/$MYLOG
+#!/bin/bash
+
+MYLOG=$1 
+
+echo "Creating backup directory" >> /home/$USER/$MYLOG
+mkdir /home/$USER/work_backup
+
+echo "Copying Files" >> /home/$USER/$MYLOG
+cp -v /home/$USER/work/* /home/$USER/work_backup/ >> /home/$USER/$MYLOG
+echo "Finished Copying Files" >> /home/$USER/$MYLOG
+#!/bin/bash
+
+echo "Creating backup directory" >> /home/cloud_user/backup_logs
+mkdir /home/cloud_user/work_backup
+
+echo "Copying Files" >> /home/cloud_user/backup_logs
+cp -v /home/cloud_user/work/* /home/cloud_user/work_backup/ >> /home/cloud_user/backup_logs
+echo "Finished Copying Files" >> /home/cloud_user/backup_logs
+#!/bin/bash
+# Check that a particular file exists
+
+echo "Enter the file name"
+#read FILENAME
+read FILENAME=$1
+echo "Check if file $FILENAME exists"
+
+# NOTE THAT a,e, of f tests for an existense of a file
+
+if [ -a $FILENAME ]
+    then
+    echo "File $FILENAME Does indeed exist"
+fi
+
+# # check for a negative event or exit
+# if [ ! -a $NOFILE ]
+#     then
+#     echo "File $NOFILE Does not exist"
+# fi#!/bin/bash
+# demo of command line values passed in with our shell script 
+
+USERNAME=$1
+PASSWORD=$2
+# echo "The following item was passed in to the script at run time $1 $2"
+echo "The following username is $USERNAME and Password is $PASSWORD"#!/bin/bash
+
+# Script is intended to show how to do simple substitution
+
+TODAYSDATE=`date`
+
+USERFILES= `find /home -user cloud_user`
+
+echo "Today's data : $TODAYSDATE"
+echo "All files owned by : $USERFILES"
+#!/bin/bash
+# For loop example
+
+echo "List all shell scripts in current directory"
+
+SHELLSCRIPTS=`ls -la *.sh`
+
+echo "Listing is $SHELLSCRIPTS"
+
+for SCRIPT in "$SHELLSCRIPTS"; do 
+    DISPLAY="`cat -- $SCRIPT`"
+    echo "File: $SCRIPT - Contents $DISPLAY"
+done#!/bin/bash
+# Simple if script for guessing a number
+
+echo "Guess the secret number"
+echo "=======================\n"
+echo "Enter a number between 1 and 5 :"
+
+read GUESS
+
+if [ $GUESS -eq 3 ]
+    then
+    echo "You guess the correct number"
+fi
+#!/bin/bash
+# test multiple expressions in a single if statement
+
+FILENAME=$1
+
+echo "Testing for $FILENAME and readability"
+
+if [ -f $FILENAME ] && [ -r $FILENAME ]
+    then 
+    echo "File $FILENAME exists and is readable"
+fi #!/bin/bash
+# Simple example of if then else and nested if statements
+
+clear
+
+echo "Enter a number between 1 and 3"
+read VALUE
+
+#if [ "$VALUE" -eq "1" ] 2>/dev/null || [ "$VALUE" -eq "2" ] 2>/dev/null || [ "$VALUE" -eq "3" ] 2>/dev/null; then
+if [ "$VALUE" -eq "1" ] 2>/dev/null; then
+    echo "You entered #1"
+elif [ "$VALUE" -eq "2" ] 2>/dev/null; then
+    echo "You entered #2"
+elif [ "$VALUE" -eq "3" ] 2>/dev/null; then
+    echo "You entered #3"
+else
+    echo "Directions were not followed"
+fi
