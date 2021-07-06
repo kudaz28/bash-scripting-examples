@@ -26,11 +26,16 @@ function choice_three() {
     echo "Third selection made"
 }
 
+function error_handler() {
+    echo "Calling handler function"
+    echo "Try harder next time"
+}
+
 case $MENU_CHOICE in
     1) choice_one ;;
     2) choice_two ;;
     3) choice_three ;;
-    *) echo "Try harder next time";;
+    *) error_handler ;;
 esac
 
 
