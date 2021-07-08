@@ -10,4 +10,4 @@ read GUESS
 if [ $GUESS -eq 3 ]
     then
     echo "You guess the correct number"
-fi
+fi 
